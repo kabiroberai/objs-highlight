@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname "$0")/highlightjs"
+
+cp ../objectivescript.js src/languages/objectivescript.js
+mkdir test/detect/objectivescript
+touch test/detect/objectivescript/default.txt
+
+npm install
+node tools/build.js objectivescript
+
+rm src/languages/objectivescript.js
+rm -rf test/detect/objectivescript
+
+mv build/highlight.pack.js ../highlight.min.js
