@@ -3,6 +3,8 @@ Language: ObjectiveScript
 Category: scripting
 */
 
+// NOTE: When building from Xcode, must run clean first
+
 function(hljs) {
   var IDENT_RE = '[A-Za-z$_][0-9A-Za-z$_]*';
   var OBJS_TYPE_KEYWORDS = 'void unsigned id long int char short float BOOL double Class SEL'
@@ -30,6 +32,12 @@ function(hljs) {
       // ObjectiveScript
       'NSLog defineBlock Pointer loadFunc box unbox hookClass defineClass'
   };
+
+  // used to highlight `hook` in `$class hook`
+  // copy KEYWORDS, don't assign by reference
+  var OBJS_CLASS_KEYWORDS = Object.assign({}, KEYWORDS);
+  OBJS_CLASS_KEYWORDS.keyword += ' hook';
+
   var EXPRESSIONS;
   var NUMBER = {
     className: 'number',
@@ -180,9 +188,9 @@ function(hljs) {
       {
       	// OBJS class
       	className: 'class',
-      	keywords: KEYWORDS,
+      	keywords: OBJS_CLASS_KEYWORDS,
       	lexemes: LEXEMES,
-      	begin: /\$class(?: hook)?/, end: /$/,
+        begin: /\$class(?: hook)?/, end: /{?$/, excludeEnd: true,
       	contains: [
       		hljs.UNDERSCORE_TITLE_MODE
       	]
