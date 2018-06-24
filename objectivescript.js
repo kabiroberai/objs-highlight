@@ -16,7 +16,7 @@ function(hljs) {
       // ECMAScript 6 modules import
       'import from as ' +
       // ObjectiveScript
-      OBJS_TYPE_KEYWORDS + ' $class $end $orig'
+      OBJS_TYPE_KEYWORDS + ' self $class $end $orig'
     ,
     literal:
       'true false null undefined NaN Infinity',
