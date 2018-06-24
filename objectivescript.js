@@ -74,6 +74,7 @@ function(hljs) {
     hljs.C_LINE_COMMENT_MODE
   ]);
 
+  // include $ to support objs keywords
   var LEXEMES = /[a-zA-Z$]\w*/;
 
   return {
@@ -137,20 +138,6 @@ function(hljs) {
               }
             ]
           },
-          { // E4X / JSX
-            begin: /</, end: /(\/\w+|\w+\/)>/,
-            subLanguage: 'xml',
-            contains: [
-              {begin: /<\w+\s*\/>/, skip: true},
-              {
-                begin: /<\w+/, end: /(\/\w+|\w+\/)>/, skip: true,
-                contains: [
-                  {begin: /<\w+\s*\/>/, skip: true},
-                  'self'
-                ]
-              }
-            ]
-          }
         ],
         relevance: 0
       },
@@ -196,6 +183,7 @@ function(hljs) {
       	]
       },
       {
+        // OBJS method
       	className: 'function',
       	begin: /^\s*[-+]\s*\(.*?\)/,
       	end: /\{/, excludeEnd: true,
