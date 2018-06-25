@@ -1,10 +1,12 @@
 /*
 Language: ObjectiveScript
+Author: Kabir Oberai <me@kabiroberai.com>
 Category: scripting
 */
 
-// NOTE: When building from Xcode, must run clean first
+// based on javascript.js
 
+// NOTE: When building from Xcode, must run clean first
 function(hljs) {
   var IDENT_RE = '[A-Za-z$_][0-9A-Za-z$_]*';
   var OBJS_TYPE_KEYWORDS = 'void unsigned id long int char short float BOOL double Class SEL'
@@ -16,8 +18,7 @@ function(hljs) {
       // ECMAScript 6 modules import
       'import from as ' +
       // ObjectiveScript
-      OBJS_TYPE_KEYWORDS + ' self $class $end $orig'
-    ,
+      OBJS_TYPE_KEYWORDS + ' self $class $end $orig',
     literal:
       'true false null undefined NaN Infinity',
     built_in:
@@ -30,7 +31,7 @@ function(hljs) {
       'module console window document Symbol Set Map WeakSet WeakMap Proxy Reflect ' +
       'Promise ' +
       // ObjectiveScript
-      'NSLog defineBlock Pointer loadFunc box unbox hookClass defineClass'
+      'defineBlock Pointer loadFunc box unbox hookClass defineClass'
   };
 
   // used to highlight `hook` in `$class hook`
@@ -78,7 +79,7 @@ function(hljs) {
   var LEXEMES = /[a-zA-Z$]\w*/;
 
   return {
-    aliases: ['js', 'jsx'],
+    aliases: ['objs'],
     keywords: KEYWORDS,
     lexemes: LEXEMES,
     contains: [
@@ -188,6 +189,11 @@ function(hljs) {
       	begin: /^\s*[-+]\s*\(.*?\)/,
       	end: /\{/, excludeEnd: true,
       	keywords: OBJS_TYPE_KEYWORDS
+      },
+      {
+        // taken from objectivec.js
+        className: 'built_in',
+        begin: '\\b(AV|CA|CF|CG|CI|CL|CM|CN|CT|MK|MP|MTK|MTL|NS|SCN|SK|UI|WK|XC)\\w+',
       }
     ],
     illegal: /#(?!!)/
