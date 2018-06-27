@@ -28,8 +28,7 @@ function(hljs) {
       'TypeError URIError Number Math Date String RegExp Array Float32Array ' +
       'Float64Array Int16Array Int32Array Int8Array Uint16Array Uint32Array ' +
       'Uint8Array Uint8ClampedArray ArrayBuffer DataView JSON Intl arguments require ' +
-      'module console window document Symbol Set Map WeakSet WeakMap Proxy Reflect ' +
-      'Promise ' +
+      'module Symbol Set Map WeakSet WeakMap Proxy Reflect Promise ' +
       // ObjectiveScript
       'defineBlock Pointer loadFunc box unbox hookClass defineClass'
   };
@@ -178,7 +177,7 @@ function(hljs) {
       	className: 'class',
       	keywords: OBJS_CLASS_KEYWORDS,
       	lexemes: LEXEMES,
-        begin: /\$class(?: hook)?/, end: /{?$/, excludeEnd: true,
+        begin: /\$class(?: hook)?/, end: /\{?$/, excludeEnd: true,
       	contains: [
       		hljs.UNDERSCORE_TITLE_MODE
       	]
@@ -187,7 +186,7 @@ function(hljs) {
         // OBJS method
       	className: 'function',
       	begin: /^\s*[-+]\s*\(.*?\)/,
-      	end: /\{/, excludeEnd: true,
+      	end: /\{|$/, excludeEnd: true,
       	keywords: OBJS_TYPE_KEYWORDS
       },
       {
