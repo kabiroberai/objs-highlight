@@ -9,7 +9,7 @@ Category: scripting
 // NOTE: When building from Xcode, must run clean first
 function(hljs) {
   var IDENT_RE = '[A-Za-z$_][0-9A-Za-z$_]*';
-  var OBJS_TYPE_KEYWORDS = 'void unsigned id long int char short float BOOL double Class SEL'
+  var OBJS_TYPE_KEYWORDS = 'void unsigned id long int char short float BOOL double Class SEL struct'
   var KEYWORDS = {
     keyword:
       'in of if for while finally var new function do return void else break catch ' +
@@ -18,7 +18,7 @@ function(hljs) {
       // ECMAScript 6 modules import
       'import from as ' +
       // ObjectiveScript
-      OBJS_TYPE_KEYWORDS + ' self $class $end $orig',
+      OBJS_TYPE_KEYWORDS + ' self @class @end @struct @function @sizeof @encode @cast %hook %end %orig',
     literal:
       'true false null undefined NaN Infinity',
     built_in:
@@ -32,11 +32,6 @@ function(hljs) {
       // ObjectiveScript
       'defineBlock Pointer loadFunc box unbox hookClass defineClass'
   };
-
-  // used to highlight `hook` in `$class hook`
-  // copy KEYWORDS, don't assign by reference
-  var OBJS_CLASS_KEYWORDS = Object.assign({}, KEYWORDS);
-  OBJS_CLASS_KEYWORDS.keyword += ' hook';
 
   var EXPRESSIONS;
   var NUMBER = {
@@ -74,8 +69,8 @@ function(hljs) {
     hljs.C_LINE_COMMENT_MODE
   ]);
 
-  // include $ to support objs keywords
-  var LEXEMES = /[a-zA-Z$]\w*/;
+  // include % and @ to support objs keywords
+  var LEXEMES = /[a-zA-Z%@]\w*/;
 
   return {
     aliases: ['objs'],
@@ -175,12 +170,22 @@ function(hljs) {
       {
       	// OBJS class
       	className: 'class',
-      	keywords: OBJS_CLASS_KEYWORDS,
+      	keywords: KEYWORDS,
       	lexemes: LEXEMES,
-        begin: /\$class(?: hook)?/, end: /\{?$/, excludeEnd: true,
+        begin: /@class/, end: /\{?$/, excludeEnd: true,
       	contains: [
       		hljs.UNDERSCORE_TITLE_MODE
       	]
+      },
+      {
+        // OBJS hook
+        className: 'class',
+        keywords: KEYWORDS,
+        lexemes: LEXEMES,
+        begin: /%hook/, end: /\{?$/, excludeEnd: true,
+        contains: [
+          hljs.UNDERSCORE_TITLE_MODE
+        ]
       },
       {
         // OBJS method
