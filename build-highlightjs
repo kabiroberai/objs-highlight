@@ -6,7 +6,6 @@ cd "$(dirname "$0")/highlightjs"
 function clean {
     rm -rf test/detect/objectivescript
     rm -f src/languages/objectivescript.js
-    rm -f build/highlight.pack.js
 }
 
 trap clean EXIT
@@ -19,4 +18,4 @@ touch test/detect/objectivescript/default.txt
 npm install
 node tools/build.js objectivescript
 
-mv build/highlight.pack.js ../highlight.min.js
+cp build/highlight.pack.js ../highlight.min.js

@@ -69,13 +69,19 @@ function(hljs) {
     hljs.C_LINE_COMMENT_MODE
   ]);
 
+  var OBJC_CLASS_MODE = {
+    // taken from objectivec.js
+    className: 'built_in',
+    begin: '\\b(AV|CA|CF|CG|CI|CL|CM|CN|CT|MK|MP|MTK|MTL|NS|SCN|SK|UI|WK|XC)\\w+',
+  };
+
   // include % and @ to support objs keywords
-  var LEXEMES = /[a-zA-Z%@]\w*/;
+  var OBJS_LEXEMES = '[a-zA-Z@%]\\w*';
 
   return {
     aliases: ['objs'],
     keywords: KEYWORDS,
-    lexemes: LEXEMES,
+    lexemes: OBJS_LEXEMES,
     contains: [
       {
         className: 'meta',
@@ -92,6 +98,7 @@ function(hljs) {
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
       NUMBER,
+      OBJC_CLASS_MODE,
       { // object attr container
         begin: /[{,]\s*/, relevance: 0,
         contains: [
@@ -101,6 +108,22 @@ function(hljs) {
             contains: [{className: 'attr', begin: IDENT_RE, relevance: 0}]
           }
         ]
+      },
+      {
+        // OBJS hook
+        // this has to be before the "value" container mode so that %hook takes precedence over the % operator
+        className: 'class',
+        keywords: KEYWORDS,
+        lexemes: OBJS_LEXEMES,
+        begin: '%hook', end: '\\{?$', excludeEnd: true,
+        contains: [
+          hljs.UNDERSCORE_TITLE_MODE
+        ]
+      },
+      {
+        keywords: KEYWORDS,
+        lexemes: OBJS_LEXEMES,
+        begin: '%end|%orig', end: '$'
       },
       { // "value" container
         begin: '(' + hljs.RE_STARTERS_RE + '|\\b(case|return|throw)\\b)\\s*',
@@ -171,21 +194,11 @@ function(hljs) {
       	// OBJS class
       	className: 'class',
       	keywords: KEYWORDS,
-      	lexemes: LEXEMES,
-        begin: /@class/, end: /\{?$/, excludeEnd: true,
+      	lexemes: OBJS_LEXEMES,
+        begin: '@class', end: /\{?$/, excludeEnd: true,
       	contains: [
       		hljs.UNDERSCORE_TITLE_MODE
       	]
-      },
-      {
-        // OBJS hook
-        className: 'class',
-        keywords: KEYWORDS,
-        lexemes: LEXEMES,
-        begin: /%hook/, end: /\{?$/, excludeEnd: true,
-        contains: [
-          hljs.UNDERSCORE_TITLE_MODE
-        ]
       },
       {
         // OBJS method
@@ -193,6 +206,40 @@ function(hljs) {
       	begin: /^\s*[-+]\s*\(.*?\)/,
       	end: /\{|$/, excludeEnd: true,
       	keywords: OBJS_TYPE_KEYWORDS
+      },
+      {
+        className: 'function',
+        lexemes: OBJS_LEXEMES,
+        keywords: '@function ' + OBJS_TYPE_KEYWORDS,
+        begin: '@function', end: /\)\;?$/,
+        contains: [
+          {
+            // from cpp.js
+            begin: hljs.IDENT_RE + '\\s*\\(', returnBegin: true,
+            contains: [hljs.UNDERSCORE_TITLE_MODE],
+          },
+          OBJC_CLASS_MODE,
+          NUMBER
+        ]
+      },
+      {
+        lexemes: OBJS_LEXEMES,
+        keywords: '@extern ' + OBJS_TYPE_KEYWORDS,
+        begin: '@extern', end: /\;?$/,
+        contains: [
+          OBJC_CLASS_MODE,
+          {
+            begin: hljs.IDENT_RE + '\\s*\\;?$', returnBegin: true,
+            contains: [hljs.UNDERSCORE_TITLE_MODE],
+          },
+          NUMBER
+        ]
+      },
+      {
+        lexemes: OBJS_LEXEMES,
+        keywords: '@struct ' + OBJS_TYPE_KEYWORDS,
+        begin: '@struct', end: /{/,
+        contains: [hljs.UNDERSCORE_TITLE_MODE]
       },
       {
         // taken from objectivec.js
