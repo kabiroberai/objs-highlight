@@ -9,7 +9,7 @@ Category: scripting
 // NOTE: When building from Xcode, must run clean first
 function(hljs) {
   var IDENT_RE = '[A-Za-z$_][0-9A-Za-z$_]*';
-  var OBJS_TYPE_KEYWORDS = 'void unsigned id long int char short float BOOL double Class SEL struct'
+  var OBJS_TYPE_KEYWORDS = 'void unsigned id long int char short float BOOL double Class SEL struct';
   var KEYWORDS = {
     keyword:
       'in of if for while finally var new function do return void else break catch ' +
@@ -30,7 +30,7 @@ function(hljs) {
       'Uint8Array Uint8ClampedArray ArrayBuffer DataView JSON Intl arguments require ' +
       'module Symbol Set Map WeakSet WeakMap Proxy Reflect Promise ' +
       // ObjectiveScript
-      'defineBlock Pointer loadFunc box unbox hookClass defineClass'
+      'defineBlock Pointer loadFunc box unbox hookClass defineClass sizeof getRef loadSymbol cast'
   };
 
   var EXPRESSIONS;
@@ -84,6 +84,16 @@ function(hljs) {
     lexemes: OBJS_LEXEMES,
     contains: [
       {
+        className: 'function',
+        keywords: KEYWORDS,
+        lexemes: OBJS_LEXEMES,
+        begin: '\\^\\s*(' + OBJS_TYPE_KEYWORDS.split(' ').join('|') + '|[\\(\\{])', end: '\\{',
+        contains: [
+          OBJC_CLASS_MODE,
+          NUMBER
+        ]
+      },
+      {
         className: 'meta',
         relevance: 10,
         begin: /^\s*['"]use (strict|asm)['"]/
@@ -123,7 +133,7 @@ function(hljs) {
       {
         keywords: KEYWORDS,
         lexemes: OBJS_LEXEMES,
-        begin: '%end|%orig', end: '$'
+        begin: '%end|%orig'
       },
       { // "value" container
         begin: '(' + hljs.RE_STARTERS_RE + '|\\b(case|return|throw)\\b)\\s*',
