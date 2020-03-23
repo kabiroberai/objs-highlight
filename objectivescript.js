@@ -20,7 +20,8 @@ function(hljs) {
       // ObjectiveScript
       OBJS_TYPE_KEYWORDS + ' self @class @end @struct @function @sizeof @encode @cast %hook %end %orig',
     literal:
-      'true false null undefined NaN Infinity',
+      'true false null undefined NaN Infinity ' +
+      'YES NO',
     built_in:
       'eval isFinite isNaN parseFloat parseInt decodeURI decodeURIComponent ' +
       'encodeURI encodeURIComponent escape unescape Object Function Boolean Error ' +
